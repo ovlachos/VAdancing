@@ -2,6 +2,7 @@
 # The webPage object provides the webdriver
 import random
 from POM import Locators as loc
+from POM import MainPage as mpage
 from time import sleep
 
 
@@ -40,7 +41,7 @@ class VA_LogIn:
 
             sleep(3)
 
-        return MainPage(self.page)
+        return mpage.MainPage(self.page)
 
     def challenge(self, originalString):
         import operator
@@ -72,11 +73,4 @@ class VA_LogIn:
         return False
 
 
-class MainPage:
-    def __init__(self, webPage):
-        # from POM import insta_topRibbon_POM as topRibbon
-        self.page = webPage
-        self.driver = self.page.driver
-        # self.topRibbon_SearchField = topRibbon.SearchField(self.page)
-        # self.topRibbon_myAccount = topRibbon.AccountTab(self.page)
-        # self.topRibbon_courses = topRibbon.AccountTab(self.page)
+

@@ -240,3 +240,6 @@ class WebPage:
 
     def getTextFromWebElement(self, webElement):
         return none  # webElement.
+
+    def goBack(self):
+        self.driver.back()
