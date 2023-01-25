@@ -38,8 +38,13 @@ courseLib_XPath = {
 
 }
 
-### EssentialSkills
-EssentialSkills_XPath = {
+### CourseCategories
+courseCategory_XPath = {
     'startCourseButtons': "//div[contains(@style,'block')]//a",
     # 'Beginners Survival Kit': "//a[contains(text(),'Beginners Survival Kit')]",
+}
+
+### Course Videos
+courseVideos_XPath = {
+    'videoThumbs': "//img[contains(@class,'thumb')]"
 }

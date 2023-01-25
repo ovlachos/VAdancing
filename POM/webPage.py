@@ -1,9 +1,11 @@
 import random
 from time import sleep
-from selenium import webdriver
+from seleniumwire import webdriver
+from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
 from functools import wraps
 from POM import Locators as loc
+
 
 # All POMs require a webPage object to be instantiated/initialized.
 # The webPage object provides the webdriver and a "what page am I currently browsing" method
@@ -12,32 +14,32 @@ class Browser:
 
     def __init__(self, headless=False):
         # ~~~ setting up a Firefox driver
-        sessionDataFromJSON_ = self.getSessionFromJSON()
+        # sessionDataFromJSON_ = self.getSessionFromJSON()
         self.newSession = True
 
-        if not self.previousSessionExists(sessionDataFromJSON_):
-            self.createNewBrowserSession(headless)
-        else:
-            try:
-                self.driver = self.create_driver_session(sessionDataFromJSON_['session_id'], sessionDataFromJSON_['executor_url'])
-
-                # Old FireFox code
-                # self.driver = self.create_driver_session(sessionDataFromJSON_['session_id']
-                #                                          , sessionDataFromJSON_['executor_url'])
-
-                print(f"Got that old browser session with id {sessionDataFromJSON_['session_id']}")
-                self.driver.implicitly_wait(6)
-
-                # Testing if we really got that old session. If not we are getting an exception here
-                # self.driver.get('https://intoli.com/blog/not-possible-to-block-chrome-headless/')
-                # self.driver.get('https://instagram.com')
-
-                self.newSession = False
-                print(f"It's final: ReUsing browser session with id {sessionDataFromJSON_['session_id']}")
-            except Exception as e:
-                print(f'Creating new browser session because:\n{e}')
-                self.createNewBrowserSession(headless)
-                self.newSession = True
+        # if not self.previousSessionExists(sessionDataFromJSON_):
+        self.createNewBrowserSession(headless)
+        # else:
+        #     try:
+        #         self.driver = self.create_driver_session(sessionDataFromJSON_['session_id'], sessionDataFromJSON_['executor_url'])
+        #
+        #         # Old FireFox code
+        #         # self.driver = self.create_driver_session(sessionDataFromJSON_['session_id']
+        #         #                                          , sessionDataFromJSON_['executor_url'])
+        #
+        #         print(f"Got that old browser session with id {sessionDataFromJSON_['session_id']}")
+        #         self.driver.implicitly_wait(6)
+        #
+        #         # Testing if we really got that old session. If not we are getting an exception here
+        #         # self.driver.get('https://intoli.com/blog/not-possible-to-block-chrome-headless/')
+        #         # self.driver.get('https://instagram.com')
+        #
+        #         self.newSession = False
+        #         print(f"It's final: ReUsing browser session with id {sessionDataFromJSON_['session_id']}")
+        #     except Exception as e:
+        #         print(f'Creating new browser session because:\n{e}')
+        #         self.createNewBrowserSession(headless)
+        #         self.newSession = True
 
     def createNewBrowserSession(self, headless):
 
@@ -85,6 +87,7 @@ class Browser:
         option.add_argument("window-size=1280,800")
         option.add_argument(
             "user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36")
+        option.set_capability("goog:loggingPrefs", {"performance": "ALL", "browser": "ALL"})
 
         self.driver = webdriver.Chrome(options=option)
 
@@ -179,7 +182,7 @@ class WebPage:
         result = None
         while result is None:
             try:
-                result = self.driver.find_element_by_xpath(xpath)
+                result = self.driver.find_element(By.XPATH, xpath)
             except Exception as e:
                 # print(f"getPageElement_tryHard:\n{e}At XPATH:\n{xpath}")
                 attempts -= 1
@@ -188,6 +191,20 @@ class WebPage:
                     break
 
         return result
+
+    def getPageElements_tryHard(self, xpath):
+        attempts = 3
+        results = None
+        while results is None:
+            try:
+                results = self.driver.find_elements(By.XPATH, xpath)
+            except Exception as e:
+                attempts -= 1
+                sleep(1)
+                if attempts == 0:
+                    break
+
+        return results
 
     def sendKey(self, key):
         if isinstance(key, str):
@@ -200,10 +217,10 @@ class WebPage:
 
     def slowTypeIntoField(self, fieldXPATH, query):
         try:
-
             field = self.getPageElement_tryHard(fieldXPATH)
             field.clear()
-            for ch in query:
+
+            for ch in str(query):
                 sleep(random.uniform(0, 1))
                 field.send_keys(ch)
             sleep(1)
@@ -222,4 +239,4 @@ class WebPage:
         return webElement.get_attribute('title')
 
     def getTextFromWebElement(self, webElement):
-        return webElement.
+        return none  # webElement.
