@@ -46,7 +46,7 @@ class MainPage:
         if self.videos:
             for video in self.videos:
                 self.videoNames.append(video.accessible_name)
-        return True
+            return True
 
     def scroll_BWD(self):
         button = self.page.getPageElement_tryHard(loc.courseVideos_XPath.get('swiperNext'))

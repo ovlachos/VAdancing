@@ -36,26 +36,27 @@ def refreshVideoTree(bot, videosAlreadyChecked):
             if currentVidName not in videosAlreadyChecked:
                 print(f"Current Video Name is {currentVidName}")
                 vid.click()
-                GaV(bot)
-                videosAlreadyChecked.append(currentVidName)
+                sleep(5)
+                del bot.mainPage.driver.requests
+                bot.mainPage.driver.refresh()
+                sleep(7)
+                if GaV(bot):
+                    videosAlreadyChecked.append(currentVidName)
                 return videosAlreadyChecked
 
 
 def GaV(bot):
-    del bot.mainPage.driver.requests
-
-    bot.mainPage.driver.refresh()
-    sleep(7)
     all_requests = bot.mainPage.driver.requests
-
     html_response = getVideoHTML(all_requests)
     if html_response:
         try:
             final_link, title = getFinalMP4Link(html_response)
             print(f"----\ Video title is: {title}")
             print(f"----\ Video link is: {final_link}")
+            return True
         except:
             print(f" We have a fail for {html_response}")
+            return False
 
 
 def getFinalMP4Link(htmlResponse):
@@ -85,9 +86,12 @@ def getFinalMP4Link(htmlResponse):
 
 
 def getVideoHTML(all_requests):
+    allData = []
     for req in all_requests:
         if req.response:
             if 'player.vimeo.com' in req.url:
                 data = sw_decode(req.response.body, req.response.headers.get('Content-Encoding', 'identity'))
                 data = data.decode("utf8")
-                return data
+                allData.append(data)
+    if len(allData) > 1:
+        return allData[0]
