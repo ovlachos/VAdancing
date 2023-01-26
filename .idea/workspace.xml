@@ -99,28 +99,32 @@
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Services/GetAVid_service.py</url>
-          <line>20</line>
-          <option name="timeStamp" value="36" />
+          <line>50</line>
+          <option name="timeStamp" value="68" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Bot.py</url>
-          <line>85</line>
-          <option name="timeStamp" value="40" />
+          <url>file://$PROJECT_DIR$/Services/GetAVid_service.py</url>
+          <line>38</line>
+          <option name="timeStamp" value="71" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Bot.py</url>
-          <line>63</line>
-          <option name="timeStamp" value="42" />
+          <url>file://$PROJECT_DIR$/Services/GetAVid_service.py</url>
+          <line>26</line>
+          <option name="timeStamp" value="77" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Services/GetAVid_service.py</url>
+          <line>81</line>
+          <option name="timeStamp" value="78" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
     <watches-manager>
       <configuration name="PythonConfigurationType">
-        <watch expression="req.response.headers.policy" language="Python" />
-        <watch expression="req.url" />
-        <watch expression="commasep[(ind - 2)]" />
-        <watch expression="commasep[(ind + 2)]" />
-        <watch expression="loc.courseLib_XPath.get(key)" />
+        <watch expression="videosAlreadyChecked" />
+        <watch expression="self.videoNames" />
+        <watch expression="self.videoNames" />
+        <watch expression="names" />
       </configuration>
     </watches-manager>
   </component>

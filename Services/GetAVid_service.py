@@ -1,29 +1,66 @@
-from selenium.webdriver import Keys
-
-from POM import Locators as loc
 from time import sleep
+
 from seleniumwire.utils import decode as sw_decode
 
+from POM import Locators as loc
 
-def GaV(bot, url):
-    bot.mainPage.driver.get(url)
-    sleep(4)
+
+def getAllVideos(bot):
+    bot.mainPage.driver.get('https://thebluesroom.com/course-library/')
+    sleep(3)
+    for topic in loc.TopicLib_XPath:
+        sleep(3)
+        if bot.mainPage.goToTopic(topic):
+            sleep(3)
+            bot.mainPage.getListOfAvailableCourses()
+            for course in bot.mainPage.courses:
+                if bot.mainPage.goToCourse(course):
+                    sleep(3)
+                    videosAlreadyChecked = []
+                    if bot.mainPage.getListOfAvailableVideos():
+                        names = bot.mainPage.videoNames
+                        print(names)
+                        for video in bot.mainPage.videos:
+                            videosAlreadyChecked = refreshVideoTree(bot, videosAlreadyChecked)
+                            sleep(5)
+                            if len(videosAlreadyChecked) % 4 == 0:
+                                bot.mainPage.scroll_BWD()
+                    bot.mainPage.goBack()
+
+
+def refreshVideoTree(bot, videosAlreadyChecked):
+    sleep(5)
+    if bot.mainPage.getListOfAvailableVideos():
+        for vid in bot.mainPage.videos:
+            currentVidName = vid.accessible_name
+            if currentVidName not in videosAlreadyChecked:
+                print(f"Current Video Name is {currentVidName}")
+                vid.click()
+                GaV(bot)
+                videosAlreadyChecked.append(currentVidName)
+                return videosAlreadyChecked
+
+
+def GaV(bot):
+    del bot.mainPage.driver.requests
+
     bot.mainPage.driver.refresh()
+    sleep(7)
     all_requests = bot.mainPage.driver.requests
+
     html_response = getVideoHTML(all_requests)
     if html_response:
-        final_link, title = getFinalMP4Link(html_response)
-        print(final_link)
-        print(title)
-
-        # try to download
-        # bot.mainPage.driver.get(final_link)
-        # elem = bot.mainPage.page.getPageElement_tryHard('//div[contains(text(),' ')]')
-        # elem.send_keys(Keys.COMMAND, "s")
+        try:
+            final_link, title = getFinalMP4Link(html_response)
+            print(f"----\ Video title is: {title}")
+            print(f"----\ Video link is: {final_link}")
+        except:
+            print(f" We have a fail for {html_response}")
 
 
 def getFinalMP4Link(htmlResponse):
     commasep = htmlResponse.split(',')
+    title = 'nothing to see here'
 
     for field in commasep:
         if "title\":\"" in field:
@@ -44,7 +81,7 @@ def getFinalMP4Link(htmlResponse):
                             if 'http' in item:
                                 return item, title
             except:
-                pass
+                print(f"----\ Video title is: {title}\n")
 
 
 def getVideoHTML(all_requests):

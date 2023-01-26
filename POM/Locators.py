@@ -24,8 +24,8 @@ homePage_XPath = {
 }
 
 ### Course Library
-courseLib_XPath = {
-    'Beginners Survival Kit': "//a[contains(text(),'Beginners Survival Kit')]",
+TopicLib_XPath = {
+    # 'Beginners Survival Kit': "//a[contains(text(),'Beginners Survival Kit')]",
     'Essential Skills': "//a[contains(text(),'Essential Skills')]",
     'Musicality': "//a[contains(text(),'Musicality')]",
     'Solo Skills': "//a[contains(text(),'Solo Skills')]",
@@ -40,11 +40,14 @@ courseLib_XPath = {
 
 ### CourseCategories
 courseCategory_XPath = {
-    'startCourseButtons': "//div[contains(@style,'block')]//a",
+    # 'startCourseButtons': "//div[contains(@style,'block')]//a",
+    'startCourseButtons': "//div[(contains(@style,'block'))]//a[contains(@class,'et_pb_button')]",
     # 'Beginners Survival Kit': "//a[contains(text(),'Beginners Survival Kit')]",
 }
 
 ### Course Videos
 courseVideos_XPath = {
-    'videoThumbs': "//img[contains(@class,'thumb')]"
+    'videoThumbs': "//figure[contains(@class,'thumb')]//img[contains(@class,'thumb')]",
+    'swiperNext': "//div[contains(@class,'swiper-button-next')]",
+    'swiperPrev': "//div[contains(@class,'swiper-button-prev')]",
 }
