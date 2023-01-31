@@ -15,16 +15,18 @@ def getAllVideos(bot):
             bot.mainPage.getListOfAvailableCourses()
             for course in bot.mainPage.courses:
                 if bot.mainPage.goToCourse(course):
+                    del bot.mainPage.driver.requests
                     sleep(3)
                     videosAlreadyChecked = []
                     if bot.mainPage.getListOfAvailableVideos():
                         names = bot.mainPage.videoNames
                         print(names)
-                        for video in bot.mainPage.videos:
-                            videosAlreadyChecked = refreshVideoTree(bot, videosAlreadyChecked)
-                            sleep(5)
-                            if len(videosAlreadyChecked) % 4 == 0:
-                                bot.mainPage.scroll_BWD()
+                        while len(videosAlreadyChecked) < len(bot.mainPage.videos):
+                            for video in bot.mainPage.videos:
+                                videosAlreadyChecked = refreshVideoTree(bot, videosAlreadyChecked)
+                                sleep(5)
+                                if len(videosAlreadyChecked) % 3 == 0:
+                                    bot.mainPage.scroll_BWD()
                     bot.mainPage.goBack()
 
 
@@ -34,14 +36,14 @@ def refreshVideoTree(bot, videosAlreadyChecked):
         for vid in bot.mainPage.videos:
             currentVidName = vid.accessible_name
             if currentVidName not in videosAlreadyChecked:
-                print(f"Current Video Name is {currentVidName}")
+                # print(f"Current Video Name is {currentVidName}")
                 vid.click()
                 sleep(5)
-                del bot.mainPage.driver.requests
                 bot.mainPage.driver.refresh()
-                sleep(7)
+                sleep(14)
                 if GaV(bot):
                     videosAlreadyChecked.append(currentVidName)
+                del bot.mainPage.driver.requests
                 return videosAlreadyChecked
 
 

@@ -99,42 +99,21 @@
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Services/GetAVid_service.py</url>
-          <line>49</line>
-          <option name="timeStamp" value="68" />
+          <line>60</line>
+          <option name="timeStamp" value="84" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Services/GetAVid_service.py</url>
-          <line>42</line>
-          <option name="timeStamp" value="71" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Services/GetAVid_service.py</url>
-          <line>26</line>
-          <option name="timeStamp" value="77" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Services/GetAVid_service.py</url>
-          <line>82</line>
-          <option name="timeStamp" value="78" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Services/GetAVid_service.py</url>
-          <line>23</line>
-          <option name="timeStamp" value="79" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Services/GetAVid_service.py</url>
-          <line>35</line>
-          <option name="timeStamp" value="80" />
+          <line>52</line>
+          <option name="timeStamp" value="91" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
     <watches-manager>
       <configuration name="PythonConfigurationType">
-        <watch expression="videosAlreadyChecked" />
-        <watch expression="self.videoNames" />
-        <watch expression="self.videoNames" />
-        <watch expression="names" />
+        <watch expression="self.courseDict" />
+        <watch expression="GaV(bot)" />
+        <watch expression="final_link, title" />
       </configuration>
     </watches-manager>
   </component>

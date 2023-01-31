@@ -29,7 +29,7 @@ class Browser:
         option.set_capability("goog:loggingPrefs", {"performance": "ALL", "browser": "ALL"})
 
         self.driver = webdriver.Chrome(options=option)
-        self.driver.implicitly_wait(10)
+        self.driver.implicitly_wait(15)
 
         executor_url = self.driver.command_executor._url
         session_id = self.driver.session_id
