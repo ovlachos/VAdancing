@@ -1,5 +1,6 @@
 from time import sleep
 
+import Logger as logg
 from POM import Locators as loc
 
 
@@ -11,7 +12,7 @@ class MainPage:
         sleep(1)
 
     def goToTopic(self, topicName):
-        button = self.page.getPageElement_tryHard(loc.TopicLib_XPath.get(topicName))
+        button = self.page.getPageElement_tryHard(loc.TopicLib_XPath.get(topicName), True)
         if button:
             button.click()
             return True
@@ -30,7 +31,7 @@ class MainPage:
             self.courseNames = [i for i in self.courseNames if i]
             self.courses = [i for i in self.courses if i.text]
 
-            print(self.courseDict)
+            logg.logSmth(self.courseDict)
             return True
 
     def goToCourse_Name(self, courseName):
@@ -43,7 +44,7 @@ class MainPage:
     def goToCourse(self, course):
         if self.courses:
             if course:
-                print(f"--\ {self.courseDict.get(course.accessible_name)}")
+                logg.logSmth(f"--\ {self.courseDict.get(course.accessible_name)}")
                 course.click()
                 return True
 
@@ -56,11 +57,25 @@ class MainPage:
             return True
 
     def scroll_BWD(self):
-        button = self.page.getPageElement_tryHard(loc.courseVideos_XPath.get('swiperNext'))
-        if button:
-            button.click()
+        try:
+            button = self.page.getPageElement_tryHard(loc.courseVideos_XPath.get('swiperPrev'), True)
+            if button:
+                button.click()
+        except:
+            logg.logSmth("scroll B failed")
 
     def scroll_FWD(self):
-        button = self.page.getPageElement_tryHard(loc.courseVideos_XPath.get('swiperPrev'))
-        if button:
-            button.click()
+        try:
+            button = self.page.getPageElement_tryHard(loc.courseVideos_XPath.get('swiperNext'), True)
+            if button:
+                button.click()
+        except:
+            logg.logSmth("scroll F failed")
+
+    def clickOnVidPlayButton(self):
+        try:
+            button = self.page.getPageElement_tryHard(loc.courseVideos_XPath.get('playButton'))
+            if button:
+                button.click()
+        except:
+            logg.logSmth("Play button click failed")

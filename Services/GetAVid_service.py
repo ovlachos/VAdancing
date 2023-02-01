@@ -2,11 +2,13 @@ from time import sleep
 
 from seleniumwire.utils import decode as sw_decode
 
+import Logger as logg
 from POM import Locators as loc
 
 
 def getAllVideos(bot):
     bot.mainPage.driver.get('https://thebluesroom.com/course-library/')
+    bot.mainPage.driver.execute_script("document.body.style.zoom='25%'")
     sleep(3)
     for topic in loc.TopicLib_XPath:
         sleep(3)
@@ -20,13 +22,14 @@ def getAllVideos(bot):
                     videosAlreadyChecked = []
                     if bot.mainPage.getListOfAvailableVideos():
                         names = bot.mainPage.videoNames
-                        print(names)
+                        logg.logSmth(f" Video Names : {names}")
                         while len(videosAlreadyChecked) < len(bot.mainPage.videos):
                             for video in bot.mainPage.videos:
                                 videosAlreadyChecked = refreshVideoTree(bot, videosAlreadyChecked)
                                 sleep(5)
                                 if len(videosAlreadyChecked) % 3 == 0:
-                                    bot.mainPage.scroll_BWD()
+                                    bot.mainPage.scroll_FWD()
+                                del bot.mainPage.driver.requests
                     bot.mainPage.goBack()
 
 
@@ -36,14 +39,19 @@ def refreshVideoTree(bot, videosAlreadyChecked):
         for vid in bot.mainPage.videos:
             currentVidName = vid.accessible_name
             if currentVidName not in videosAlreadyChecked:
-                # print(f"Current Video Name is {currentVidName}")
-                vid.click()
-                sleep(5)
-                bot.mainPage.driver.refresh()
-                sleep(14)
-                if GaV(bot):
-                    videosAlreadyChecked.append(currentVidName)
-                del bot.mainPage.driver.requests
+                logg.logSmth(f"Current Video Name is {currentVidName}")
+                if vid.is_displayed():
+                    vid.click()
+                    sleep(5)
+                    bot.mainPage.clickOnVidPlayButton()
+                    sleep(5)
+                    bot.mainPage.driver.refresh()
+                    sleep(14)
+                    if GaV(bot):
+                        videosAlreadyChecked.append(currentVidName)
+                else:
+
+                    bot.mainPage.scroll_BWD()
                 return videosAlreadyChecked
 
 
@@ -53,11 +61,11 @@ def GaV(bot):
     if html_response:
         try:
             final_link, title = getFinalMP4Link(html_response)
-            print(f"----\ Video title is: {title}")
-            print(f"----\ Video link is: {final_link}")
+            logg.logSmth(f"----\ Video title is: {title}")
+            logg.logSmth(f"----\ Video link is: {final_link}")
             return True
         except:
-            print(f" We have a fail for {html_response}")
+            logg.logSmth(f" We have a fail for {html_response}")
             return False
 
 
@@ -83,8 +91,13 @@ def getFinalMP4Link(htmlResponse):
                         for item in fieldBreakDown:
                             if 'http' in item:
                                 return item, title
+                    elif "720" in commasep[(ind + 2)]:
+                        fieldBreakDown = field.split("\"")
+                        for item in fieldBreakDown:
+                            if 'http' in item:
+                                return item, title
             except:
-                print(f"----\ Video title is: {title}\n")
+                logg.logSmth(f"----\ Video title is: {title}\n")
 
 
 def getVideoHTML(all_requests):

@@ -95,25 +95,12 @@
     </option>
   </component>
   <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Services/GetAVid_service.py</url>
-          <line>60</line>
-          <option name="timeStamp" value="84" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Services/GetAVid_service.py</url>
-          <line>52</line>
-          <option name="timeStamp" value="91" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
     <watches-manager>
       <configuration name="PythonConfigurationType">
         <watch expression="self.courseDict" />
         <watch expression="GaV(bot)" />
         <watch expression="final_link, title" />
+        <watch expression="len(bot.mainPage.videos)" />
       </configuration>
     </watches-manager>
   </component>

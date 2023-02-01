@@ -37,7 +37,7 @@ class VA_LogIn:
 
             self.page.slowTypeIntoField(loc.loginPage_XPath['captchaResponse'], capResponse)
 
-            self.page.getPageElement_tryHard(loc.loginPage_XPath['LogIn_button']).click()
+            self.page.getPageElement_tryHard(loc.loginPage_XPath['LogIn_button'],True).click()
 
             sleep(3)
 

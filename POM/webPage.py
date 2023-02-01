@@ -1,6 +1,7 @@
 import random
 from time import sleep
 
+from selenium import webdriver
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from seleniumwire import webdriver
@@ -12,20 +13,19 @@ from seleniumwire import webdriver
 class Browser:
 
     def __init__(self, headless=False):
-        # ~~~ setting up a Firefox driver
-        # sessionDataFromJSON_ = self.getSessionFromJSON()
+
         self.newSession = True
 
-        # if not self.previousSessionExists(sessionDataFromJSON_):
         self.createNewBrowserSession(headless)
 
     def createNewBrowserSession(self, headless):
 
         option = webdriver.ChromeOptions()
         option.add_argument('--disable-blink-features=AutomationControlled')
-        option.add_argument("window-size=1280,800")
+
         option.add_argument(
             "user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36")
+        option.add_argument("window-size=6000x4000")
         option.set_capability("goog:loggingPrefs", {"performance": "ALL", "browser": "ALL"})
 
         self.driver = webdriver.Chrome(options=option)
@@ -115,7 +115,7 @@ class WebPage:
         if 'wait' in errorMessagePresent:
             return True
 
-    def getPageElement_tryHard(self, xpath):
+    def getPageElement_tryHard(self, xpath, toClick=False):
         attempts = 3
         result = None
         while result is None:
