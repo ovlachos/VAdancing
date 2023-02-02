@@ -105,16 +105,6 @@ class WebPage:
 
         return currentPageURL
 
-    def tH_checkIfIhit_ActionLimit(self):
-        try:
-            errorMessagePresent = self.driver.find_element_by_xpath(
-                "//p[contains(text(),'Please wait a few minutes')]").text
-        except:
-            return False
-
-        if 'wait' in errorMessagePresent:
-            return True
-
     def getPageElement_tryHard(self, xpath, toClick=False):
         attempts = 3
         result = None

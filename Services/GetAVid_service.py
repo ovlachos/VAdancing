@@ -1,5 +1,7 @@
 from time import sleep
 
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.wait import WebDriverWait
 from seleniumwire.utils import decode as sw_decode
 
 import Logger as logg
@@ -7,8 +9,8 @@ from POM import Locators as loc
 
 
 def getAllVideos(bot):
+    bot.mainPage.driver.execute_script("document.body.style.zoom='75%'")
     bot.mainPage.driver.get('https://thebluesroom.com/course-library/')
-    bot.mainPage.driver.execute_script("document.body.style.zoom='25%'")
     sleep(3)
     for topic in loc.TopicLib_XPath:
         sleep(3)
@@ -41,7 +43,10 @@ def refreshVideoTree(bot, videosAlreadyChecked):
             if currentVidName not in videosAlreadyChecked:
                 logg.logSmth(f"Current Video Name is {currentVidName}")
                 if vid.is_displayed():
-                    vid.click()
+                    wait = WebDriverWait(bot.mainPage.driver, 10)
+                    vidToClick = wait.until(EC.element_to_be_clickable(vid))
+                    vidToClick.click()
+                    # vid.click()
                     sleep(5)
                     bot.mainPage.clickOnVidPlayButton()
                     sleep(5)

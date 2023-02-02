@@ -2,16 +2,15 @@ from random import randint
 from time import sleep
 
 import auth
-from POM import Locators as loc
 from POM import logIn_page as login
 from POM import webPage as wp
 from Services import GetAVid_service as GAV
+
 
 class InstaBot:
     datetimeStringFormat_day = '%Y_%m_%d'
 
     def __init__(self, headless=False):
-
         self.headless = headless
         self.timeUpperBound = 48
         self.timeLowerBound = 34
@@ -43,10 +42,5 @@ class InstaBot:
     def botSleep(self, factor=1):
         sleep(randint(factor * self.timeLowerBound, factor * self.timeUpperBound))
 
-    def delayOps(self, minimum=2, maximum=20):
-        sleepTime = randint((minimum * 60), (maximum * 60))
-        print(f'Sleeping for {int(sleepTime / 60)} minutes')
-        sleep(sleepTime)
-
     def getAvideo(self):
-          return GAV.getAllVideos(self)
+        return GAV.getAllVideos(self)

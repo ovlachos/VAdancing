@@ -25,8 +25,8 @@ homePage_XPath = {
 
 ### Course Library
 TopicLib_XPath = {
-    'Beginners Survival Kit': "//a[contains(text(),'Beginners Survival Kit')]",
-    # 'Essential Skills': "//a[contains(text(),'Essential Skills')]",
+    # 'Beginners Survival Kit': "//a[contains(text(),'Beginners Survival Kit')]/../..",
+    'Essential Skills': "//a[contains(text(),'Essential Skills')]/../..",
     # 'Musicality': "//a[contains(text(),'Musicality')]",
     # 'Solo Skills': "//a[contains(text(),'Solo Skills')]",
     # 'Vocabulary': "//a[contains(text(),'Vocabulary')]",
