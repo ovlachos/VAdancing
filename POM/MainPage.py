@@ -1,5 +1,7 @@
 from time import sleep
 
+from selenium.webdriver import ActionChains
+
 import Logger as logg
 from POM import Locators as loc
 
@@ -50,6 +52,7 @@ class MainPage:
 
     def getListOfAvailableVideos(self):
         self.videos = self.page.getPageElements_tryHard(loc.courseVideos_XPath.get('videoThumbs'))
+        self.videoThumbsToClick = self.page.getPageElements_tryHard(loc.courseVideos_XPath.get('videoThumbsToClick'))
         self.videoNames = []
         if self.videos:
             for video in self.videos:
@@ -76,6 +79,10 @@ class MainPage:
         try:
             button = self.page.getPageElement_tryHard(loc.courseVideos_XPath.get('playButton'))
             if button:
+                actions = ActionChains(self.driver)
+                actions.move_to_element(button).perform()
                 button.click()
+            else:
+                logg.logSmth("Play button click failed")
         except:
             logg.logSmth("Play button click failed")

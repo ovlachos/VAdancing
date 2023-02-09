@@ -49,7 +49,8 @@ courseCategory_XPath = {
 courseVideos_XPath = {
     # 'videoThumbs': "//figure[contains(@class,'thumb')]//img[contains(@class,'thumb')]",
     'videoThumbs': "//div[contains(@class,'vimeography-thumbnail-container')]//figure[contains(@class,'thumb')]//img[contains(@class,'thumb')]",
+    'videoThumbsToClick': "//a[contains(@href,'vimeography_video=')]",
     'swiperNext': "//div[contains(@class,'swiper-button-next')]",
     'swiperPrev': "//div[contains(@class,'swiper-button-prev')]",
-    'playButton': "//button[contains(@aria-label,'Play')]",
+    'playButton': "//button[contains(@class,'PlayButton')]",
 }
