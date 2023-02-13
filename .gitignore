@@ -129,3 +129,5 @@ dmypy.json
 .pyre/
 
 auth.py
+
+BrowserSession.json

@@ -1,7 +1,7 @@
-from time import sleep
-
 import keyboard
 from seleniumwire.utils import decode as sw_decode
+from getch import getch
+from time import sleep
 
 import Logger as logg
 from POM import Locators as loc
@@ -42,7 +42,7 @@ def getAllVideos(bot):
                     bot.mainPage.goBack()
 
 
-def userAssistedVideoGet(bot):
+def userAssistedVideoGetWindows(bot):
     bot.mainPage.driver.get('https://thebluesroom.com/course-library/')
     sleep(3)
 
@@ -51,6 +51,28 @@ def userAssistedVideoGet(bot):
         while True:
             # I navigate manually and press the key to get the data, then wait again for key press
             if keyboard.is_pressed("q"):
+                if bot.mainPage.getListOfAvailableVideos():
+                    for vid in bot.mainPage.videos:
+                        logg.logSmth(bot.mainPage.videoNames)
+                        logg.logSmth(bot.mainPage.videoThumbsToClick)
+                del bot.mainPage.driver.requests
+                sleep(2)
+                refreshVideoTreeSimple(bot)
+                del bot.mainPage.driver.requests
+                break
+
+
+def userAssistedVideoGetMacOS(bot):
+    bot.mainPage.driver.get('https://thebluesroom.com/course-library/')
+    sleep(3)
+
+    for i in range(0, 35):
+        logg.logSmth(f"Waiting on 'q' key press for the {i} time")
+        while True:
+            # I navigate manually and press the key to get the data, then wait again for key press
+
+            char = getch()  # read the pressed key
+            if char == chr(113):  # 113 == 'q' print(ord('q')) => 113
                 if bot.mainPage.getListOfAvailableVideos():
                     for vid in bot.mainPage.videos:
                         logg.logSmth(bot.mainPage.videoNames)

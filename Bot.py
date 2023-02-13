@@ -46,4 +46,5 @@ class InstaBot:
         return GAV.getAllVideos(self)
 
     def getAvideoAssisted(self):
-        return GAV.userAssistedVideoGet(self)
+        # return GAV.userAssistedVideoGetWindows(self)
+        return GAV.userAssistedVideoGetMacOS(self)
