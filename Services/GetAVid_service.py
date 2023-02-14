@@ -1,6 +1,6 @@
 import keyboard
 from seleniumwire.utils import decode as sw_decode
-from getch import getch
+# from getch import getch
 from time import sleep
 
 import Logger as logg
@@ -53,8 +53,9 @@ def userAssistedVideoGetWindows(bot):
             if keyboard.is_pressed("q"):
                 if bot.mainPage.getListOfAvailableVideos():
                     for vid in bot.mainPage.videos:
-                        logg.logSmth(bot.mainPage.videoNames)
-                        logg.logSmth(bot.mainPage.videoThumbsToClick)
+                        pass
+                        # logg.logSmth(bot.mainPage.videoNames)
+                        # logg.logSmth(bot.mainPage.videoThumbsToClick)
                 del bot.mainPage.driver.requests
                 sleep(2)
                 refreshVideoTreeSimple(bot)
