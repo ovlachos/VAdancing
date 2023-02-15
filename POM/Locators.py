@@ -25,23 +25,24 @@ homePage_XPath = {
 
 ### Course Library
 TopicLib_XPath = {
-    # 'Beginners Survival Kit': "//a[contains(text(),'Beginners Survival Kit')]/../..",
+    'Beginners Survival Kit': "//a[contains(text(),'Beginners Survival Kit')]/../..",
     'Essential Skills': "//a[contains(text(),'Essential Skills')]/../..",
-    # 'Musicality': "//a[contains(text(),'Musicality')]",
-    # 'Solo Skills': "//a[contains(text(),'Solo Skills')]",
-    # 'Vocabulary': "//a[contains(text(),'Vocabulary')]",
-    # 'Idiom Dances': "//a[contains(text(),'Idiom Dances')]",
-    # 'Top Tips and Q&As': "//a[contains(text(),'Top Tips and Q&As')]",
-    # 'Practice With Us': "//a[contains(text(),'Practice With Us')]",
-    # 'Choreographies': "//a[contains(text(),'Choreographies')]",
-    # 'Challenges': "//a[contains(text(),'Challenges')]",
+    'Musicality': "//a[contains(text(),'Musicality')]",
+    'Solo Skills': "//a[contains(text(),'Solo Skills')]",
+    'Vocabulary': "//a[contains(text(),'Vocabulary')]",
+    'Idiom Dances': "//a[contains(text(),'Idiom Dances')]",
+    'Top Tips and Q&As': "//a[contains(text(),'Top Tips and Q&As')]",
+    'Practice With Us': "//a[contains(text(),'Practice With Us')]",
+    'Choreographies': "//a[contains(text(),'Choreographies')]",
+    'Challenges': "//a[contains(text(),'Challenges')]",
+    'New Courses': "//a[contains(text(),'New Courses')]",
 
 }
 
 ### CourseCategories
 courseCategory_XPath = {
     'startCourseButtons': "//div[(contains(@style,'block'))]//a[contains(@class,'et_pb_button')]",
-    'courseName': "//div[(contains(@style,'block'))]//a[contains(@class,'et_pb_button')]/../../../..//h6"
+    'courseName': "//div[(contains(@style,'block'))]//a[contains(@class,'et_pb_button')]/../../../..//h6/strong"
 
 }
 

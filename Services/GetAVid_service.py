@@ -1,7 +1,8 @@
-import keyboard
-from seleniumwire.utils import decode as sw_decode
 # from getch import getch
 from time import sleep
+
+import keyboard
+from seleniumwire.utils import decode as sw_decode
 
 import Logger as logg
 from POM import Locators as loc
@@ -9,37 +10,89 @@ from POM import Locators as loc
 
 # Another Idea would be to get all the video carousel links that end in the
 # form of "...vimeography_video=" plus some random number
+# Write a function that harvests all these links in to a .json file organised by class and video title in a catalogue.
 
 # If the title of the video provided by the HTML response is not the one expected e.g. "top tips dancing between the beats"
 # I need to go to the next video and then go back again to get the right video ----\ Video title is: Top Tip: Dancing between the beats
 
 # I need to create a list containing [videoURL, videoName] tuples
 
-def getAllVideos(bot):
-    bot.mainPage.driver.execute_script("document.body.style.zoom='75%'")
+def harvestVideoLinks(bot):
+    logg.logSmth('\n')
+    logg.logSmth('|||||||******************************************|||||||')
+    logg.logSmth('|||||||******************************************|||||||')
+    logg.logSmth('|||||||******************************************|||||||')
     bot.mainPage.driver.get('https://thebluesroom.com/course-library/')
     sleep(3)
     for topic in loc.TopicLib_XPath:
-        sleep(3)
+        logg.logSmth(f"\n\n")
+        logg.logSmth(f"Topic is {topic}")
+        logg.logSmth(f"*******************************************")
+
         if bot.mainPage.goToTopic(topic):
             sleep(3)
-            bot.mainPage.getListOfAvailableCourses()
-            for course in bot.mainPage.courses:
-                if bot.mainPage.goToCourse(course):
-                    del bot.mainPage.driver.requests
-                    sleep(3)
-                    videosAlreadyChecked = []
-                    if bot.mainPage.getListOfAvailableVideos():
-                        names = bot.mainPage.videoNames
-                        logg.logSmth(f" Video Names : {names}")
-                        while len(videosAlreadyChecked) < len(bot.mainPage.videos):
-                            for videoName in bot.mainPage.videoNames:
-                                videosAlreadyChecked = refreshVideoTree(bot, videosAlreadyChecked, videoName)
-                                sleep(5)
-                                if len(videosAlreadyChecked) % 3 == 0:
-                                    bot.mainPage.scroll_FWD()
+
+            if bot.mainPage.getListOfAvailableCourses():
+
+                for course in bot.mainPage.courses:
+                    logg.logSmth(f"\n")
+                    logg.logSmth(f"--/ Course Name is: {course.name}")
+                    logg.logSmth(f"--/ Course URL is: {course.url}")
+                    logg.logSmth(f"*******************************************")
+
+                    if bot.mainPage.goToCourse(course):
+                        sleep(4)
+
+                        videosAlreadyChecked = []
+                        if bot.mainPage.getListOfAvailableVideos():
+
+                            for vid in bot.mainPage.videos:
+                                logg.logSmth(f"----/ Video Name is: {vid.name}")
+                                logg.logSmth(f"----/ Video URL is: {vid.url}")
+
+            bot.mainPage.driver.get('https://thebluesroom.com/course-library/')
+
+
+def getAllVideos(bot):
+    logg.logSmth('\n')
+    logg.logSmth('|||||||******************************************|||||||')
+    logg.logSmth('|||||||******************************************|||||||')
+    logg.logSmth('|||||||******************************************|||||||')
+    bot.mainPage.driver.get('https://thebluesroom.com/course-library/')
+    sleep(3)
+    for topic in loc.TopicLib_XPath:
+        logg.logSmth(f"\n\n")
+        logg.logSmth(f"Topic is {topic}")
+        logg.logSmth(f"*******************************************")
+
+        if bot.mainPage.goToTopic(topic):
+            sleep(3)
+
+            if bot.mainPage.getListOfAvailableCourses():
+                for course in bot.mainPage.courses:
+                    logg.logSmth(f"\n")
+                    logg.logSmth(f"--/ Course Name is: {course.name}")
+                    logg.logSmth(f"--/ Course URL is: {course.url}")
+                    logg.logSmth(f"*******************************************")
+
+                    if bot.mainPage.goToCourse(course):
+                        sleep(4)
+
+                        videosAlreadyChecked = []
+                        if bot.mainPage.getListOfAvailableVideos():
+
+                            for vid in bot.mainPage.videos:
+                                logg.logSmth(f"----/ Video Name is: {vid.name}")
+                                logg.logSmth(f"----/ Video URL is: {vid.url}")
+
                                 del bot.mainPage.driver.requests
-                    bot.mainPage.goBack()
+                                if bot.mainPage.goToVideo(vid):
+                                    sleep(3)
+                                    videosAlreadyChecked = refreshVideoTree(bot, videosAlreadyChecked, vid.name)
+                                    sleep(5)
+                                    del bot.mainPage.driver.requests
+
+            bot.mainPage.driver.get('https://thebluesroom.com/course-library/')
 
 
 def userAssistedVideoGetWindows(bot):
@@ -52,7 +105,7 @@ def userAssistedVideoGetWindows(bot):
             # I navigate manually and press the key to get the data, then wait again for key press
             if keyboard.is_pressed("q"):
                 if bot.mainPage.getListOfAvailableVideos():
-                    for vid in bot.mainPage.videos:
+                    for vid in bot.mainPage.videoWebElements:
                         pass
                         # logg.logSmth(bot.mainPage.videoNames)
                         # logg.logSmth(bot.mainPage.videoThumbsToClick)
@@ -72,12 +125,11 @@ def userAssistedVideoGetMacOS(bot):
         while True:
             # I navigate manually and press the key to get the data, then wait again for key press
 
-            char = getch()  # read the pressed key
+            char = 'getch()  # read the pressed key'
             if char == chr(113):  # 113 == 'q' print(ord('q')) => 113
                 if bot.mainPage.getListOfAvailableVideos():
-                    for vid in bot.mainPage.videos:
-                        logg.logSmth(bot.mainPage.videoNames)
-                        logg.logSmth(bot.mainPage.videoThumbsToClick)
+                    for vid in bot.mainPage.videoWebElements:
+                        pass
                 del bot.mainPage.driver.requests
                 sleep(2)
                 refreshVideoTreeSimple(bot)
@@ -97,23 +149,17 @@ def refreshVideoTreeSimple(bot):
 
 def refreshVideoTree(bot, videosAlreadyChecked, expectedName=''):
     sleep(5)
-    if bot.mainPage.getListOfAvailableVideos():
-        for vid in bot.mainPage.videoThumbsToClick:
-            if vid.is_displayed():
-                vid.click()
-                sleep(5)
-                bot.mainPage.clickOnVidPlayButton()
-                sleep(5)
-                bot.mainPage.driver.refresh()
-                sleep(14)
-                for i in range(0, 5):
-                    if GaV(bot, expectedName):
-                        videosAlreadyChecked.append(expectedName)
-                    else:
-                        makeSureWeAreGettingTheRightVideoRequests(bot, vid)
-            else:
-                bot.mainPage.scroll_BWD()
-            return videosAlreadyChecked
+    bot.mainPage.clickOnVidPlayButton()
+    sleep(5)
+    bot.mainPage.driver.refresh()
+    sleep(14)
+    for i in range(0, 5):
+        if GaV(bot, expectedName):
+            videosAlreadyChecked.append(expectedName)
+        else:
+            logg.logSmth(f"Refresh video error for {expectedName}")
+
+    return videosAlreadyChecked
 
 
 def makeSureWeAreGettingTheRightVideoRequests(bot, vid):

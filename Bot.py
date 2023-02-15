@@ -48,3 +48,6 @@ class InstaBot:
     def getAvideoAssisted(self):
         return GAV.userAssistedVideoGetWindows(self)
         # return GAV.userAssistedVideoGetMacOS(self)
+
+    def harvestVideoURL(self):
+        return GAV.harvestVideoLinks(self)
