@@ -82,8 +82,8 @@ def getAllVideos(bot):
                         if bot.mainPage.getListOfAvailableVideos():
 
                             for vid in bot.mainPage.videos:
-                                logg.logSmth(f"----/ Video Name is: {vid.name}")
-                                logg.logSmth(f"----/ Video URL is: {vid.url}")
+                                logg.logSmth(f"----/ Expected Video Name is: {vid.name}")
+                                # logg.logSmth(f"----/ Video URL is: {vid.url}")
 
                                 del bot.mainPage.driver.requests
                                 if bot.mainPage.goToVideo(vid):
@@ -149,15 +149,16 @@ def refreshVideoTreeSimple(bot):
 
 def refreshVideoTree(bot, videosAlreadyChecked, expectedName=''):
     sleep(5)
+    bot.mainPage.driver.refresh()
     bot.mainPage.clickOnVidPlayButton()
     sleep(5)
     bot.mainPage.driver.refresh()
-    sleep(14)
-    for i in range(0, 5):
-        if GaV(bot, expectedName):
-            videosAlreadyChecked.append(expectedName)
-        else:
-            logg.logSmth(f"Refresh video error for {expectedName}")
+    sleep(10)
+    # for i in range(0, 3):
+    if GaV(bot, expectedName):
+        videosAlreadyChecked.append(expectedName)
+    else:
+        logg.logSmth(f"Refresh video error for {expectedName}")
 
     return videosAlreadyChecked
 
@@ -199,17 +200,20 @@ def GaV(bot, expectedName=' '):
     if html_response:
         try:
             final_link, title = getFinalMP4Link(html_response)
-            if expectedName in title:
+
+            if not final_link:
+                logg.logSmth("No final link Response")
+
+            if not title:
+                logg.logSmth("No title link Response")
+
+            if title:
                 logg.logSmth(f"----\ Video title is: {title}")
-                logg.logSmth(f"----\ Video link is: {final_link}")
+                logg.logSmth(f"----\ Video link is: {final_link}\n")
                 return True
-            else:
-                logg.logSmth(f"----\ Video title is not the expected")
-                logg.logSmth(f"----\ Video title is: {title}")
-                logg.logSmth(f"----\ Video link is: {final_link}")
-                return False
-        except:
-            logg.logSmth(f" We have a fail for {html_response}")
+        except Exception as e:
+
+            logg.logSmth(f" We have a fail for {expectedName}. Exception is \n {e}")
             return False
 
 

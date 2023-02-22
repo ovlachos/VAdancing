@@ -3,4 +3,5 @@ import Bot
 bot = Bot.InstaBot()
 bot.logIn()
 # bot.getAvideoAssisted()
-bot.harvestVideoURL()
+# bot.harvestVideoURL()
+bot.getAvideo()

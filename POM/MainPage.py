@@ -1,6 +1,6 @@
 from time import sleep
 
-from selenium.webdriver import ActionChains
+from selenium.webdriver import ActionChains, Keys
 
 import Logger as logg
 from POM import Locators as loc
@@ -66,10 +66,19 @@ class MainPage:
             for courseWebElem in self.courseWebElements:
                 course = Course(self.page, courseWebElem)
                 course.url = courseWebElem.get_attribute('href')
-                # course.name = self.courseTruenames[p].accessible_name
-                course.name = course.url.split("/")[-2]
-                self.courses.append(course)
-                logg.logSmth(f"Course Name: {course.name} ->  {course.url} ")
+
+                try:
+                    course.name = course.url.split("/")[-2]
+                except:
+                    try:
+                        course.name = self.courseTruenames[p].accessible_name
+                    except:
+                        continue
+
+                testList = [c for c in self.courses if course.url in c.url]
+                if len(testList) == 0:
+                    self.courses.append(course)
+                    logg.logSmth(f"Course Name: {course.name} ->  {course.url} ")
 
                 p += 1
 
@@ -87,8 +96,11 @@ class MainPage:
         if self.courses:
             if course in self.courses:
                 if course.url:
-                    self.driver.get(course.url)
-                    return True
+                    try:
+                        self.driver.get(course.url)
+                        return True
+                    except:
+                        return
 
     def goToVideo(self, vid):
         if self.videos:
@@ -123,6 +135,8 @@ class MainPage:
 
     def clickOnVidPlayButton(self):
         try:
+            # self.driver.ActionChains(self.driver).send_keys(Keys.ESCAPE).perform()
+            self.driver.execute_script("window.scrollTo(0, 150)")
             button = self.page.getPageElement_tryHard(loc.courseVideos_XPath.get('playButton'))
             if button:
                 actions = ActionChains(self.driver)

@@ -53,5 +53,9 @@ courseVideos_XPath = {
     'videoThumbsToClick': "//a[contains(@href,'vimeography_video=')]",
     'swiperNext': "//div[contains(@class,'swiper-button-next')]",
     'swiperPrev': "//div[contains(@class,'swiper-button-prev')]",
-    'playButton': "//button[contains(@class,'PlayButton')]",
+    # 'playButton': "//button[contains(@class,'PlayButton')]/..",
+    # 'playButton': "//div[contains(@class,'PlayButton')]",
+    # 'playButton': "//button[contains(@class,'PlayButton')]/..",
+    # 'playButton': "//div[contains(@id,'player')]",
+    'playButton': "//div[contains(@id,'player')]//video",
 }
