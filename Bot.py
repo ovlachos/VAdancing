@@ -42,8 +42,14 @@ class InstaBot:
     def botSleep(self, factor=1):
         sleep(randint(factor * self.timeLowerBound, factor * self.timeUpperBound))
 
-    def getAvideo(self):
+    def getACourse(self, courseUrl):
+        return GAV.getACourse(self, courseUrl)
+
+    def getAllVideos(self):
         return GAV.getAllVideos(self)
+
+    def getAVideo(self, videoURL):
+        return GAV.getAVideo(self, videoURL)
 
     def getAvideoAssisted(self):
         return GAV.userAssistedVideoGetWindows(self)

@@ -133,3 +133,5 @@ auth.py
 BrowserSession.json
 
 .idea/workspace.xml
+
+.idea/

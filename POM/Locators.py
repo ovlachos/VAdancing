@@ -25,16 +25,16 @@ homePage_XPath = {
 
 ### Course Library
 TopicLib_XPath = {
-    'Beginners Survival Kit': "//a[contains(text(),'Beginners Survival Kit')]/../..",
-    'Essential Skills': "//a[contains(text(),'Essential Skills')]/../..",
-    'Musicality': "//a[contains(text(),'Musicality')]",
-    'Solo Skills': "//a[contains(text(),'Solo Skills')]",
-    'Vocabulary': "//a[contains(text(),'Vocabulary')]",
-    'Idiom Dances': "//a[contains(text(),'Idiom Dances')]",
-    'Top Tips and Q&As': "//a[contains(text(),'Top Tips and Q&As')]",
-    'Practice With Us': "//a[contains(text(),'Practice With Us')]",
-    'Choreographies': "//a[contains(text(),'Choreographies')]",
-    'Challenges': "//a[contains(text(),'Challenges')]",
+    # 'Beginners Survival Kit': "//a[contains(text(),'Beginners Survival Kit')]/../..",
+    # 'Essential Skills': "//a[contains(text(),'Essential Skills')]/../..",
+    # 'Musicality': "//a[contains(text(),'Musicality')]",
+    # 'Solo Skills': "//a[contains(text(),'Solo Skills')]",
+    # 'Vocabulary': "//a[contains(text(),'Vocabulary')]",
+    # 'Idiom Dances': "//a[contains(text(),'Idiom Dances')]",
+    # 'Top Tips and Q&As': "//a[contains(text(),'Top Tips and Q&As')]",
+    # 'Practice With Us': "//a[contains(text(),'Practice With Us')]",
+    # 'Choreographies': "//a[contains(text(),'Choreographies')]",
+    # 'Challenges': "//a[contains(text(),'Challenges')]",
     'New Courses': "//a[contains(text(),'New Courses')]",
 
 }
@@ -58,4 +58,5 @@ courseVideos_XPath = {
     # 'playButton': "//button[contains(@class,'PlayButton')]/..",
     # 'playButton': "//div[contains(@id,'player')]",
     'playButton': "//div[contains(@id,'player')]//video",
+    'videoFrame': "//div[(contains(@id,'player'))]/div[(contains(@class,'vp-video-wrapper transparent'))]"
 }

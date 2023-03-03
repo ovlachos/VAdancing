@@ -33,6 +33,11 @@ class MainPage:
 
         sleep(1)
 
+    def navigateToCourseLibrary(self):
+        ribbonButton = self.page.getPageElement_tryHard(loc.homePage_XPath.get('courses'))
+        if ribbonButton:
+            ribbonButton.click()
+
     def getListOfAvailableVideos(self):
         self.videos = []
 
@@ -48,6 +53,7 @@ class MainPage:
                 video.url = self.videoThumbsToClick[p].get_attribute('href')
 
                 self.videos.append(video)
+                logg.logSmth(f"{p}-{video.name}-{video.url}")
 
                 p += 1
 
@@ -106,8 +112,22 @@ class MainPage:
         if self.videos:
             if vid in self.videos:
                 if vid.url:
-                    self.driver.get(vid.url)
-                    return True
+                    try:
+                        self.driver.get(vid.url)
+                    except Exception as e:
+                        if 'renderer' in str(e):
+                            self.driver.execute_script("window.stop();")
+                    finally:
+                        return True
+
+    def refreshVideo(self):
+        try:
+            self.driver.refresh()
+        except Exception as e:
+            if 'renderer' in str(e):
+                self.driver.execute_script("window.stop();")
+        finally:
+            return True
 
     # You can Only navigate to a topic by clicking on the button.
     # There is no unique URL for any topic, thus navigating by URL is impossible

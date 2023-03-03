@@ -22,14 +22,15 @@ class Browser:
 
         option = webdriver.ChromeOptions()
         option.add_argument('--disable-blink-features=AutomationControlled')
-
+        # option.page_load_strategy = 'eager'
         option.add_argument(
             "user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36")
         option.add_argument("window-size=6000x4000")
         option.set_capability("goog:loggingPrefs", {"performance": "ALL", "browser": "ALL"})
 
         self.driver = webdriver.Chrome(options=option)
-        self.driver.implicitly_wait(15)
+        self.driver.implicitly_wait(8)
+        # self.driver.set_page_load_timeout(30.0)
 
         executor_url = self.driver.command_executor._url
         session_id = self.driver.session_id
