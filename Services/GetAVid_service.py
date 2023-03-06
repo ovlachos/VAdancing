@@ -44,7 +44,7 @@ def harvestVideoLinks(bot):
                         sleep(4)
 
                         videosAlreadyChecked = []
-                        if bot.mainPage.getListOfAvailableVideos():
+                        if bot.mainPage.getListOfAvailableVideos(verbose=True):
 
                             for vid in bot.mainPage.videos:
                                 logg.logSmth(f"----/ Video Name is: {vid.name}")
@@ -75,7 +75,7 @@ def getAllVideos(bot):
         if bot.mainPage.goToTopic(topic):
             sleep(3)
 
-            if bot.mainPage.getListOfAvailableCourses():
+            if bot.mainPage.getListOfAvailableCourses(verbose=True):
                 for course in bot.mainPage.courses:
                     logg.logSmth(f"\n")
                     logg.logSmth(f"--/ Course Name is: {course.name}")
@@ -125,19 +125,22 @@ def getACourse(bot, courseUrl):
     logg.logSmth('|||||||******************************************|||||||')
 
     bot.mainPage.driver.get(courseUrl)
-    videosAlreadyChecked = []
-    if bot.mainPage.getListOfAvailableVideos():
+    # bot.mainPage.navigateToCourseLibrary()
+    if bot.mainPage.getListOfAvailableVideos(verbose=True):
+        videosAlreadyChecked = []
         vidCounter = 0
+
         for vid in bot.mainPage.videos:
             logg.logSmth(f"----/ Expected Video Name is: {vidCounter}-{vid.name}")
             vidCounter += 1
 
-            del bot.mainPage.driver.requests
-            if bot.mainPage.goToVideo(vid):
+            while len(videosAlreadyChecked) != vidCounter:
                 sleep(3)
                 videosAlreadyChecked = refreshVideoTree(bot, videosAlreadyChecked, vid.name)
                 sleep(5)
                 del bot.mainPage.driver.requests
+
+            bot.mainPage.goToNextVideoThumb(vid.url)
 
 
 def userAssistedVideoGetWindows(bot):
@@ -198,71 +201,76 @@ def refreshVideoTree(bot, videosAlreadyChecked, expectedName=''):
 
     bot.mainPage.refreshVideo()
 
-    sleep(5)
+    sleep(8)
     # bot.mainPage.driver.execute_script("window.stop();")
 
     # for i in range(0, 3):
-    if GaV(bot, expectedName):
+    if GaV(bot, videosAlreadyChecked, expectedName):
         videosAlreadyChecked.append(expectedName)
     else:
         logg.logSmth(f"Refresh video error for {expectedName}")
 
+    logg.logSmth(f"Videos actually checked: {len(videosAlreadyChecked)}")
     return videosAlreadyChecked
 
 
-def makeSureWeAreGettingTheRightVideoRequests(bot, vid):
-    # Refresh
-    del bot.mainPage.driver.requests
-    bot.mainPage.driver.refresh()
-    del bot.mainPage.driver.requests
+def GaV(bot, videosAlreadyChecked, expectedName=' '):
+    html_response = getHTMLResponse(bot)
 
-    # Go to next/previous video
-    targetVidIndex = bot.mainPage.videoThumbsToClick.index(vid)
-    if len(bot.mainPage.videoThumbsToClick) > targetVidIndex:
-        nextVid = bot.mainPage.videoThumbsToClick[(targetVidIndex + 1)]
-    else:
-        nextVid = bot.mainPage.videoThumbsToClick[(targetVidIndex + -1)]
-
-        # navigate to next/prev video URL
-
-    # Wait
-    sleep(5)
-
-    # Go back to target video
-    # navigate to target video URL
-
-    # Refresh
-    bot.mainPage.driver.refresh()
-
-
-def GaV(bot, expectedName=' '):
-    all_requests = bot.mainPage.driver.requests
-    if not all_requests:
-        logg.logSmth("No Requests")
-
-    html_response = getVideoHTML(all_requests)
-    if not html_response:
-        src = bot.mainPage.page.getPageElements_tryHard(loc.courseVideos_XPath.get('videoFrame'))
-        if src:
-            html_response = src.get_attribute("src")
-        else:
-            logg.logSmth("No HTML Response - tried backup")
+    if not html_response:  # switch_to_frame
+        html_response = getHTMLResponse_Alt(bot, html_response)
 
     if html_response:
         try:
-            final_link = getFinalMP4Link(html_response)
+            final_link, title = getFinalMP4Link(html_response)
+
+            nameCheck = htmlResponseNameCheck(expectedName, title, videosAlreadyChecked)
+            if not nameCheck:
+                return False
 
             if not final_link:
                 logg.logSmth("No final link Response")
+                return False
 
             if final_link:
-                # logg.logSmth(f"----\ Video title is: {title}")
+                logg.logSmth(f"----\ Video title is: {title}")
                 logg.logSmth(f"----\ Video link is: {final_link}")
                 return True
         except Exception as e:
-
             logg.logSmth(f" We have a fail for {expectedName}. Exception is \n\t\t {e}")
             return False
+
+
+def htmlResponseNameCheck(expectedName, title, videosAlreadyChecked):
+    nameLength = len(expectedName) - 3
+    if expectedName[-nameLength:] not in title:
+        logg.logSmth(f"Expected: {expectedName}\nGot: {title}")
+        for name in videosAlreadyChecked:
+            if title in name:
+                return True
+        return False
+    return True
+
+
+def getHTMLResponse_Alt(bot, html_response):
+    # src = bot.mainPage.page.getPageElements_tryHard(loc.courseVideos_XPath.get('videoFrame'))
+    iFrameWebElement = bot.mainPage.getVideoWebElement()
+    bot.mainPage.driver.switch_to.frame(iFrameWebElement)
+    src = bot.mainPage.driver.page_source
+    bot.mainPage.driver.switch_to.default_content()
+    if src:
+        html_response = src
+    else:
+        logg.logSmth("No HTML Response - tried backup")
+    return html_response
+
+
+def getHTMLResponse(bot):
+    all_requests = bot.mainPage.driver.requests
+    if not all_requests:
+        logg.logSmth("No Requests")
+    html_response = getVideoHTML(all_requests)
+    return html_response
 
 
 def getFinalMP4Link(htmlResponse):
@@ -282,19 +290,19 @@ def getFinalMP4Link(htmlResponse):
             ind = commasep.index(field)
             try:
                 if commasep[(ind + 2)]:
-                    logg.logSmth(f"Resolution: {commasep[(ind + 2)]}")
+                    # logg.logSmth(f"Resolution: {commasep[(ind + 2)]}")
                     if "1080" in commasep[(ind + 2)]:
                         fieldBreakDown = field.split("\"")
                         for item in fieldBreakDown:
                             if 'http' in item:
-                                logg.logSmth('1080p version')
-                                return item  # RETURN
+                                # logg.logSmth('1080p version')
+                                return item, title  # RETURN
                     elif "720" in commasep[(ind + 2)]:
                         fieldBreakDown = field.split("\"")
                         for item in fieldBreakDown:
                             if 'http' in item:
-                                logg.logSmth('720p version')
-                                return item  # RETURN
+                                # logg.logSmth('720p version')
+                                return item, title  # RETURN
                     else:
                         pass
                         # logg.logSmth("Final MP4 link could not be extracted from HTML response")

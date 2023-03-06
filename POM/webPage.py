@@ -134,6 +134,20 @@ class WebPage:
 
         return results
 
+    def getAlliFrames(self):
+        attempts = 3
+        results = None
+        while results is None:
+            try:
+                results = self.driver.find_elements(By.XPATH, '//iframe')
+            except Exception as e:
+                attempts -= 1
+                sleep(1)
+                if attempts == 0:
+                    break
+
+        return results
+
     def sendKey(self, key):
         if isinstance(key, str):
             try:

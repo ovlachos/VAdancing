@@ -1,6 +1,9 @@
+from telnetlib import EC
 from time import sleep
 
 from selenium.webdriver import ActionChains, Keys
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.wait import WebDriverWait
 
 import Logger as logg
 from POM import Locators as loc
@@ -38,7 +41,7 @@ class MainPage:
         if ribbonButton:
             ribbonButton.click()
 
-    def getListOfAvailableVideos(self):
+    def getListOfAvailableVideos(self, verbose=False):
         self.videos = []
 
         self.videoWebElements = self.page.getPageElements_tryHard(loc.courseVideos_XPath.get('videoThumbs'))
@@ -53,7 +56,8 @@ class MainPage:
                 video.url = self.videoThumbsToClick[p].get_attribute('href')
 
                 self.videos.append(video)
-                logg.logSmth(f"{p}-{video.name}-{video.url}")
+                if verbose:
+                    logg.logSmth(f"{p}-{video.name}-{video.url}")
 
                 p += 1
 
@@ -119,6 +123,42 @@ class MainPage:
                             self.driver.execute_script("window.stop();")
                     finally:
                         return True
+
+    def goToNextVideoThumb(self, helperURL):
+        nextVidURL = self.determineNextVideoURL(helperURL)
+        self.getListOfAvailableVideos()
+        for vid in self.videos:
+            if nextVidURL in vid.url:
+                try:
+                    vid.webElement.click()
+                    # logg.logSmth(f"C URL {helperURL}\nN URL {nextVidURL}")
+                    sleep(5)
+                    return True
+                except Exception as e:
+                    logg.logSmth(f'Navigation error: {e}')
+
+    def getVideoWebElement(self):
+        element = self.page.getPageElement_tryHard(loc.courseVideos_XPath.get('videoiFrame'))
+        if element:
+            return element
+
+    def determineNextVideoURL(self, helperURL):
+        if not self.videos:
+            self.getListOfAvailableVideos()
+
+        # self.page.driver.refresh()
+        sleep(3)
+        # currentURL = self.page.driver.current_url
+        currentURL = helperURL
+        ind = 0
+        for vid in self.videos:
+            if vid.url[-9:] in currentURL:
+                ind = self.videos.index(vid)
+
+        if (len(self.videos) - 1) > ind:
+            return self.videos[ind + 1].url
+        else:
+            return self.videos[ind].url
 
     def refreshVideo(self):
         try:

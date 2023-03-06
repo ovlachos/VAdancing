@@ -58,5 +58,14 @@ courseVideos_XPath = {
     # 'playButton': "//button[contains(@class,'PlayButton')]/..",
     # 'playButton': "//div[contains(@id,'player')]",
     'playButton': "//div[contains(@id,'player')]//video",
-    'videoFrame': "//div[(contains(@id,'player'))]/div[(contains(@class,'vp-video-wrapper transparent'))]"
+    'videoFrame': "//div[(contains(@id,'player'))]/div[(contains(@class,'vp-video-wrapper transparent'))]",
+    'videoFrame1': "//div[(contains(@id,'player'))]/div[(contains(@class,'vp-video'))]",
+    # 'videoiFrame': "//iframe[contains(@src,'vimeo')]/",
+    'videoiFrame': "//iframe[contains(@src,'vimeo')]",
+}
+
+courseThumbs_XPath = {
+    'videoThumbs': "//div[contains(@class,'vimeography-thumbnail-container')]//figure[contains(@class,'thumb')]//img[contains(@class,'thumb')]",
+    'videoThumbsToClick': "//a[contains(@href,'vimeography_video=')]",
+
 }
